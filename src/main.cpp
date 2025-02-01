@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Введите сообщение (<текст> [DEBUG/INFO/ERROR]).\n"
                  "Введите 'exit' для выхода.\n"
-                 "ChangeLevel [DEBUG/INFO/ERROR] для изменения уровня важности.\n";
+                 "ChangeLevel DEBUG/INFO/ERROR для изменения уровня важности.\n";
 
     std::string input;
     while (true) {
