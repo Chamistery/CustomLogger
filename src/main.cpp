@@ -75,6 +75,37 @@ Logger::Level ParseLogLevel(const std::string& level_str) {
     throw std::invalid_argument("Ошибка: некорректный уровень логирования!");
 }
 
+int InputHandler(LogManager& log_manager, Logger::Level& default_level) {
+    std::string input;
+    while (true) {
+        std::getline(std::cin, input);
+        if (input == "exit") {
+            return 0;
+        }
+        Logger::Level msg_level = default_level;
+        std::size_t pos = input.find_last_of(' ');
+        std::string last_word;
+        if (pos != std::string::npos) {
+            last_word = input.substr(pos + 1);
+            try {
+                msg_level = ParseLogLevel(last_word); //Парсим слово в уровень лога или же ловим ошибку
+                input = input.substr(0, pos);
+            } catch (const std::exception& exc) {
+                std::cerr << exc.what() << "\n";
+                return 1;
+            }
+        }
+        if (input == "ChangeImportanceLevel") {
+            log_manager.ChangeLevel(msg_level); //Меняем минимальный уровень важности
+        } else if (input == "ChangeDefaultLevel") {
+            default_level = msg_level; //Меняем уровень важности по умолчанию
+        }
+        else {
+            log_manager.Enqueue({input, msg_level}); //Записываем сообщение
+        }
+    }
+}
+
 int main(int argc, char* argv[]) {
     if (argc < 3) {
         std::cerr << "Использование: " << argv[0] << " <лог-файл> <уровень>" << "\n";
@@ -100,34 +131,5 @@ int main(int argc, char* argv[]) {
                  "ChangeImportanceLevel DEBUG/INFO/ERROR для изменения мин уровня важности записываемых сообщений.\n"
                  "ChangeDefaultLevel DEBUG/INFO/ERROR для изменения уровня важности по умолчанию.\n";
 
-    std::string input;
-    while (true) {
-        std::getline(std::cin, input);
-        if (input == "exit") {
-            break;
-        }
-        Logger::Level msg_level = default_level;
-        std::size_t pos = input.find_last_of(' ');
-        std::string last_word;
-        if (pos != std::string::npos) {
-            last_word = input.substr(pos + 1);
-            try {
-                msg_level = ParseLogLevel(last_word); //Парсим слово в уровень лога или же ловим ошибку
-                input = input.substr(0, pos);
-            } catch (const std::exception& exc) {
-                std::cerr << exc.what() << "\n";
-                return 1;
-            }
-        }
-        if (input == "ChangeImportanceLevel") {
-            log_manager.ChangeLevel(msg_level); //Меняем минимальный уровень важности
-        } else if (input == "ChangeDefaultLevel") {
-            default_level = msg_level; //Меняем уровень важности по умолчанию
-        }
-        else {
-            log_manager.Enqueue({input, msg_level}); //Записываем сообщение
-        }
-    }
-
-    return 0;
+    return InputHandler(log_manager, default_level);
 }
