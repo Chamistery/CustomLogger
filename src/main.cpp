@@ -97,7 +97,8 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Введите сообщение (<текст> [DEBUG/INFO/ERROR]).\n"
                  "Введите 'exit' для выхода.\n"
-                 "ChangeLevel DEBUG/INFO/ERROR для изменения уровня важности.\n";
+                 "ChangeImportanceLevel DEBUG/INFO/ERROR для изменения мин уровня важности записываемых сообщений.\n"
+                 "ChangeDefaultLevel DEBUG/INFO/ERROR для изменения уровня важности по умолчанию.\n";
 
     std::string input;
     while (true) {
@@ -118,11 +119,13 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
         }
-        if (input == "ChangeLevel") {
-            log_manager.ChangeLevel(msg_level);
+        if (input == "ChangeImportanceLevel") {
+            log_manager.ChangeLevel(msg_level);//Меняем минимальный уровень важности
+        } else if (input == "ChangeDefaultLevel") {
+            default_level = msg_level;//Меняем уровень важности по умолчанию
         }
         else {
-            log_manager.Enqueue({input, msg_level});
+            log_manager.Enqueue({input, msg_level});//Записываем сообщение
         }
     }
 
