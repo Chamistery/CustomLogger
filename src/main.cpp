@@ -120,12 +120,12 @@ int main(int argc, char* argv[]) {
             }
         }
         if (input == "ChangeImportanceLevel") {
-            log_manager.ChangeLevel(msg_level);//Меняем минимальный уровень важности
+            log_manager.ChangeLevel(msg_level); //Меняем минимальный уровень важности
         } else if (input == "ChangeDefaultLevel") {
-            default_level = msg_level;//Меняем уровень важности по умолчанию
+            default_level = msg_level; //Меняем уровень важности по умолчанию
         }
         else {
-            log_manager.Enqueue({input, msg_level});//Записываем сообщение
+            log_manager.Enqueue({input, msg_level}); //Записываем сообщение
         }
     }
 
